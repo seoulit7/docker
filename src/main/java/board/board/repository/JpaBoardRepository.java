@@ -8,6 +8,8 @@ import org.springframework.data.repository.query.Param;
 
 import board.board.entity.BoardEntity;
 import board.board.entity.BoardFileEntity;
+import org.springframework.stereotype.Repository;
+
 
 public interface JpaBoardRepository extends CrudRepository<BoardEntity, Integer>{
 
