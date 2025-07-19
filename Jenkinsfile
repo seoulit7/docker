@@ -4,7 +4,7 @@ pipeline {
             TIME_ZONE = 'Asia/Seoul'
             PROFILE = 'local'
             AWS_CREDENTIAL_NAME = 'aws-key'
-            DEPLOY_CREDENTIAL_NAME = 'deploy-ssh-key2'
+            DEPLOY_CREDENTIAL_NAME = 'deploy-ssh-key'
             REGION="ap-northeast-2"
             ECR_PATH = '670246014570.dkr.ecr.ap-northeast-2.amazonaws.com'
             IMAGE_NAME = '670246014570.dkr.ecr.ap-northeast-2.amazonaws.com/board'
@@ -59,16 +59,11 @@ pipeline {
                 }
         stage('Deploy to AWS EC2 VM'){
              steps{
-                sshagent(credentials: ['deploy-ssh-key2']) {
-                    sh """
-                        ssh -o StrictHostKeyChecking=no ubuntu@15.164.229.6 << EOF
-                            aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 670246014570.dkr.ecr.ap-northeast-2.amazonaws.com
-                            docker pull 670246014570.dkr.ecr.ap-northeast-2.amazonaws.com/board:latest
-                            docker run -d -p 8081:8081 --name board-container 670246014570.dkr.ecr.ap-northeast-2.amazonaws.com/board:latest
-                        EOF
-                    """
+                sshagent(credentials : ['deploy-ssh-key']) {
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@DEPLOY_HOST \
+                     'aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ECR_PATH; \
+                    docker run -d -p 8081:8081 -t $IMAGE_NAME:${BUILD_NUMBER};'"
                 }
-
              }
         }
 
