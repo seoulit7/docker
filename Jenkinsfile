@@ -63,7 +63,7 @@ pipeline {
                     sh """
                         ssh -o StrictHostKeyChecking=no ubuntu@15.164.229.6 << EOF
                             aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 670246014570.dkr.ecr.ap-northeast-2.amazonaws.com
-                            docker run -d -p 8081:8081 -t 670246014570.dkr.ecr.ap-northeast-2.amazonaws.com/board:${BUILD_NUMBER}
+                            docker run -d -p 8081:8081 -t 670246014570.dkr.ecr.ap-northeast-2.amazonaws.com/board:latest
                         EOF
                     """
                 }
