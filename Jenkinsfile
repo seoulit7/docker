@@ -62,7 +62,7 @@ pipeline {
                 sshagent(credentials : ['deploy-ssh-key']) {
                     sh "ssh -o StrictHostKeyChecking=no ubuntu@$DEPLOY_Host \
                      'aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ECR_PATH; \
-                    docker run -d -p 80:8080 -t $IMAGE_NAME:${BUILD_NUMBER};'"
+                    docker run -d -p 8081:8081 -t $IMAGE_NAME:${BUILD_NUMBER};'"
                 }
              }
         }
